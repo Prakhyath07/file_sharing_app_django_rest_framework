@@ -3,6 +3,12 @@ from rest_framework import serializers
 from .models import Upload_Files, Store_Folder
 serializers.ModelSerializer.create
 
+class FolderSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Store_Folder
+        fields = '__all__'
+
 class FileSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -10,18 +16,17 @@ class FileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FileListSerializer(serializers.Serializer):
-    files = serializers.ListField(
+    file = serializers.ListField(
         child = serializers.FileField(max_length = 100000 , allow_empty_file = False , use_url = False)
     )
-    # folder = serializers.CharField(required = False)
+    folder = serializers.CharField(required = False)
     
     def zip_files(self,folder):
         shutil.make_archive(f'public/static/zip/{folder}' , 'zip' ,f'public/static/{folder}' )
 
     def create(self , validated_data):
         folder = Store_Folder.objects.create()
-        print(folder)
-        files = validated_data.pop('files')
+        files = validated_data.pop('file')
         
         # files_objs = []
         for file in files:
@@ -32,4 +37,4 @@ class FileListSerializer(serializers.Serializer):
         self.zip_files(folder.uid)
 
 
-        return {'files' : files , 'folder' : str(folder.uid)}
+        return {'file' : files , 'folder' : str(folder.uid)}
