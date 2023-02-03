@@ -1,11 +1,11 @@
 from django.db import models
-from uuid import uuid
+from uuid import uuid4
 import os
 
 # Create your models here.
 
 class Store_Folder(models.Model):
-    uid = models.UUIDField(primary_key=True, editable= False, default=uuid.uuid)
+    uid = models.UUIDField(primary_key=True, editable= False, default=uuid4)
     created_at = models.DateTimeField(auto_now=True)
 
 
